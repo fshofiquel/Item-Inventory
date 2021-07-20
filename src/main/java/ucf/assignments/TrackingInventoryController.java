@@ -26,12 +26,6 @@ public class TrackingInventoryController
 	@FXML
 	private TextField searchTextArea;
 	@FXML
-	private TextField productPriceTextField;
-	@FXML
-	private TextField productSerialIDTexField;
-	@FXML
-	public TextField productNameTextField;
-	@FXML
 	public TableView InventoryTable;
 	@FXML
 	public TableColumn ValCol;
@@ -64,5 +58,9 @@ public class TrackingInventoryController
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public void searchClick(ActionEvent actionEvent)
+	{
 	}
 }

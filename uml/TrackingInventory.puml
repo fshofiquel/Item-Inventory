@@ -9,13 +9,11 @@ class TrackingInventory
 
 class TrackingInventoryController
 {
-    - productPriceTextField: TextField
-    - productSerialIDTexField: TextField
-    - productNameTextField: TextField
-    - InventoryTable: TableView
-    - ValCol: TableColumn
-    - SerialNumCol: TableColumn
-    - NameCol: TableColumn
+    - searchTextArea: TextField
+    + InventoryTable: TableView
+    + ValCol: TableColumn
+    + SerialNumCol: TableColumn
+    + NameCol: TableColumn
 
     + addIInventoryClck()
     + openSaveFileController()
@@ -31,17 +29,46 @@ class SaveFileAsController
     + loadFileClick()
 }
 
-class createInventory
+class InputNewItemController
 {
+    - PriceTextField: TextField
+    - SerialNumberTextField: TextField
+    - NameTextField: TextField
 
+    + AddItemClick()
 }
 
+class DuplicateSerialNumberErrorController
+{
+    + DupClickClose()
+}
+
+class NameLengthErrorController
+{
+    + LengthClickClose()
+}
+
+class SerialFromatErrorController
+{
+    + LengthClickClose()
+}
+
+class createInventory
+{
+    +getters()
+    +setter()
+    +putters()
+}
 
 javafx.Application <|-- TrackingInventory
 
 TrackingInventory - TrackingInventoryController
 TrackingInventoryController - createInventory
 TrackingInventoryController -- SaveFileAsController
-
+TrackingInventoryController -- InputNewItemController
+TrackingInventoryController -- DuplicateSerialNumberErrorController
+InputNewItemController -- DuplicateSerialNumberErrorController
+InputNewItemController -- NameLengthErrorController
+InputNewItemController -- SerialFromatErrorController
 
 @enduml
