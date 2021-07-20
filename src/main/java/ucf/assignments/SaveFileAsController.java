@@ -7,8 +7,8 @@ import javafx.scene.input.MouseEvent;
 
 public class SaveFileAsController
 {
-	public ChoiceBox saveAsChoiceBox;
-	public TextField filePathTextField;
+	private ChoiceBox saveAsChoiceBox;
+	private TextField filePathTextField;
 
 	public void saveFormatClick(MouseEvent mouseEvent)
 	{

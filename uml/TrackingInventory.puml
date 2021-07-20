@@ -7,9 +7,28 @@ class TrackingInventory
     + start()
 }
 
-class TrackingInventoryDriver
+class TrackingInventoryController
 {
+    - productPriceTextField: TextField
+    - productSerialIDTexField: TextField
+    - productNameTextField: TextField
+    - InventoryTable: TableView
+    - ValCol: TableColumn
+    - SerialNumCol: TableColumn
+    - NameCol: TableColumn
 
+    + addIInventoryClck()
+    + openSaveFileController()
+}
+
+class SaveFileAsController
+{
+    - saveAsChoiceBox: ChoiceBox
+    - filePathTextField: TextField
+
+    + saveFormatClick()
+    + saveAsClick()
+    + loadFileClick()
 }
 
 class createInventory
@@ -20,7 +39,9 @@ class createInventory
 
 javafx.Application <|-- TrackingInventory
 
-TrackingInventory - TrackingInventoryDriver
-TrackingInventoryDriver - createInventory
+TrackingInventory - TrackingInventoryController
+TrackingInventoryController - createInventory
+TrackingInventoryController -- SaveFileAsController
+
 
 @enduml
