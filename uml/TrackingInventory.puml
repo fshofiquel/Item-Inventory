@@ -1,5 +1,26 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+class TrackingInventory
+{
+    + main()
+    + start()
+}
+
+class TrackingInventoryDriver
+{
+
+}
+
+class createInventory
+{
+
+}
+
+
+javafx.Application <|-- TrackingInventory
+
+TrackingInventory - TrackingInventoryDriver
+TrackingInventoryDriver - createInventory
 
 @enduml

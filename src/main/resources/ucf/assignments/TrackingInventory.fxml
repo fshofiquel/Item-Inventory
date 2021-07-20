@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ucf.assignments.TrackingInventoryController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<SplitPane dividerPositions="0.11055276381909548" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" orientation="VERTICAL" prefHeight="453.0" prefWidth="808.0"
+           xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ucf.assignments.TrackingInventoryController">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="47.0" prefWidth="806.0">
+        <Button layoutX="754.0" layoutY="11.0" mnemonicParsing="false" onAction="#addIInventoryClck" text="Add"/>
+        <TextField fx:id="productPriceTextField" layoutX="64.0" layoutY="11.0" prefHeight="25.0" prefWidth="149.0"
+                   promptText="Type Value of Item "/>
+        <TextField fx:id="productSerialIDTexField" layoutX="225.0" layoutY="11.0" prefHeight="25.0" prefWidth="279.0"
+                   promptText="Type Serial Number"/>
+        <TextField fx:id="productNameTextField" layoutX="512.0" layoutY="11.0" prefHeight="25.0" prefWidth="216.0"
+                   promptText="Type Name of product"/>
+    </AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+        <TableView fx:id="InventoryTable" layoutY="-2.0" prefHeight="398.0" prefWidth="806.0">
+            <columns>
+                <TableColumn fx:id="ValCol" prefWidth="162.0" text="Value"/>
+                <TableColumn fx:id="SerialNumCol" prefWidth="251.0" text="Serial Number"/>
+                <TableColumn fx:id="NameCol" prefWidth="392.0" text="Name"/>
+            </columns>
+        </TableView>
+    </AnchorPane>
+</SplitPane>
