@@ -19,25 +19,26 @@ import java.io.IOException;
 
 // This controller will allow the user to add, remove and edit each invetory item.
 // Since this is a TableView then there will be no need to impliment a sorting method as the TableView can do that
-// itself. An active search bar would be a good idea to search
+// itself. An active search bar would be a good idea to search otherwise enter or a button can be used. Will most
+// Likely need a FilterList to do this.
 public class TrackingInventoryController
 {
 	@FXML
-	public TextField searchTextArea;
+	private TextField searchTextArea;
 	@FXML
 	private TextField productPriceTextField;
 	@FXML
 	private TextField productSerialIDTexField;
 	@FXML
-	private TextField productNameTextField;
+	public TextField productNameTextField;
 	@FXML
-	private TableView InventoryTable;
+	public TableView InventoryTable;
 	@FXML
-	private TableColumn ValCol;
+	public TableColumn ValCol;
 	@FXML
-	private TableColumn SerialNumCol;
+	public TableColumn SerialNumCol;
 	@FXML
-	private TableColumn NameCol;
+	public TableColumn NameCol;
 
 	// This will add the inventory item. It will check against duplicate serial numbers and prompt an error window
 	// There will be a check to make sure the serial number is alphanumeric
