@@ -61,6 +61,10 @@ public class TrackingInventoryController
 		openNewWindow("saveFileAs.fxml", "Save As / Import File");
 	}
 
+	public void openHelpClick(ActionEvent actionEvent)
+	{
+	}
+
 	// Helper method to reduce clutting when a new window needs to be called.
 	public void openNewWindow(String fileName, String windowTitle)
 	{
@@ -77,4 +81,6 @@ public class TrackingInventoryController
 			e.printStackTrace();
 		}
 	}
+
+
 }
