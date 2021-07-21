@@ -9,7 +9,7 @@ import javafx.event.ActionEvent;
 public class NameLengthErrorController
 {
 	// Closes the window
-	public void LengthClickClose(ActionEvent actionEvent)
+	public void NameClickClose(ActionEvent actionEvent)
 	{
 	}
 }

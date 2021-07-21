@@ -6,10 +6,10 @@ package ucf.assignments;
 
 import javafx.event.ActionEvent;
 
-public class SerialFromatErrorController
+public class SerialFormatErrorController
 {
 	// Closes the window
-	public void LengthClickClose(ActionEvent actionEvent)
+	public void SerialClickClose(ActionEvent actionEvent)
 	{
 	}
 }

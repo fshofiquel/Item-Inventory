@@ -62,7 +62,7 @@ public class TrackingInventoryController
 	}
 
 	// Helper method to reduce clutting when a new window needs to be called.
-	public void openNewWindow(String fileName, String windowTitle)
+	private void openNewWindow(String fileName, String windowTitle)
 	{
 		try
 		{

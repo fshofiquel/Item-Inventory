@@ -9,22 +9,26 @@ class TrackingInventory
 
 class TrackingInventoryController
 {
-    - searchTextArea: TextField
+    - searchTextArea : TextField
+    ..
     + InventoryTable: TableView
     + ValCol: TableColumn
     + SerialNumCol: TableColumn
     + NameCol: TableColumn
-
-    + addIInventoryClck()
+    ==
+    + searchClick()
+    + removeItemClick()
+    + addItemClick()
     + openSaveFileController()
-    + openNewWindow()
+    ..
+    - openNewWindow()
 }
 
 class SaveFileAsController
 {
     - saveAsChoiceBox: ChoiceBox
     - filePathTextField: TextField
-
+    ==
     + saveFormatClick()
     + saveAsClick()
     + loadFileClick()
@@ -35,7 +39,7 @@ class InputNewItemController
     - PriceTextField: TextField
     - SerialNumberTextField: TextField
     - NameTextField: TextField
-
+    ==
     + AddItemClick()
 }
 
@@ -46,12 +50,12 @@ class DuplicateSerialNumberErrorController
 
 class NameLengthErrorController
 {
-    + LengthClickClose()
+    + NameClickClose()
 }
 
-class SerialFromatErrorController
+class SerialFormatErrorController
 {
-    + LengthClickClose()
+    + SerialClickClose()
 }
 
 class createInventory
@@ -70,6 +74,6 @@ TrackingInventoryController -- InputNewItemController
 TrackingInventoryController -- DuplicateSerialNumberErrorController
 InputNewItemController -- DuplicateSerialNumberErrorController
 InputNewItemController -- NameLengthErrorController
-InputNewItemController -- SerialFromatErrorController
+InputNewItemController -- SerialFormatErrorController
 
 @enduml
