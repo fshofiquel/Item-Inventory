@@ -41,6 +41,19 @@ public class TrackingInventoryController
 	{
 	}
 
+	// Removes and item that is selected from the TableView
+	@FXML
+	public void removeItemClick(ActionEvent actionEvent)
+	{
+	}
+
+	// propmpt opening the InputNewItem window.
+	@FXML
+	public void addItemClick(ActionEvent actionEvent)
+	{
+		openNewWindow("InputNewItem.fxml", "Input New Item");
+	}
+
 	// Causes the button to launch a new window for save and import.
 	@FXML
 	public void openSaveFileController(ActionEvent actionEvent)
@@ -48,6 +61,7 @@ public class TrackingInventoryController
 		openNewWindow("saveFileAs.fxml", "Save As / Import File");
 	}
 
+	// Helper method to reduce clutting when a new window needs to be called.
 	public void openNewWindow(String fileName, String windowTitle)
 	{
 		try

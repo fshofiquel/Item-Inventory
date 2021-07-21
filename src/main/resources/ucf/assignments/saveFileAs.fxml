@@ -6,16 +6,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-           orientation="VERTICAL" prefHeight="169.0" prefWidth="403.0" xmlns="http://javafx.com/javafx/16"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.SaveFileAsController">
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="169.0" prefWidth="403.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.SaveFileAsController">
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="86.0" prefWidth="402.0">
-        <Button layoutX="14.0" layoutY="27.0" mnemonicParsing="false" onAction="#saveAsClick" text="Save As"/>
-        <ChoiceBox fx:id="saveAsChoiceBox" layoutX="238.0" layoutY="27.0" onMouseClicked="#saveFormatClick"
-                   prefWidth="150.0"/>
+        <Button layoutX="14.0" layoutY="27.0" mnemonicParsing="false" onAction="#saveAsClick" text="Save As" />
+        <ChoiceBox fx:id="saveAsChoiceBox" layoutX="238.0" layoutY="27.0" onMouseClicked="#saveFormatClick" prefWidth="150.0" />
     </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-        <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadFileClick" text="Load File"/>
-        <TextField fx:id="filePathTextField" layoutX="239.0" layoutY="28.0"/>
+        <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadFileClick" text="Load File" />
+        <TextField fx:id="filePathTextField" layoutX="239.0" layoutY="28.0" promptText="Type file path here" />
     </AnchorPane>
 </SplitPane>
