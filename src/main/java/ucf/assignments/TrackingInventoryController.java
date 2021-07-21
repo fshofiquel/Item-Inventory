@@ -35,7 +35,7 @@ public class TrackingInventoryController
 	public TableColumn NameCol;
 
 
-	// This will open the windo to the InputNewItemController
+	// This will open the window to the InputNewItemController
 	@FXML
 	public void searchClick(ActionEvent actionEvent)
 	{
@@ -59,10 +59,6 @@ public class TrackingInventoryController
 	public void openSaveFileController(ActionEvent actionEvent)
 	{
 		openNewWindow("saveFileAs.fxml", "Save As / Import File");
-	}
-
-	public void openHelpClick(ActionEvent actionEvent)
-	{
 	}
 
 	// Helper method to reduce clutting when a new window needs to be called.
