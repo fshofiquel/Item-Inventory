@@ -7,21 +7,21 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.11055276381909548" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="453.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.TrackingInventoryController">
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="47.0" prefWidth="806.0">
-        <Button layoutX="754.0" layoutY="11.0" mnemonicParsing="false" onAction="#addIInventoryClck" text="Add" />
-        <TextField fx:id="productPriceTextField" layoutX="12.0" layoutY="11.0" prefHeight="26.0" prefWidth="202.0" promptText="Type Value of Item " />
-        <TextField fx:id="productSerialIDTexField" layoutX="225.0" layoutY="11.0" prefHeight="25.0" prefWidth="279.0" promptText="Type Serial Number" />
-        <TextField fx:id="productNameTextField" layoutX="512.0" layoutY="11.0" prefHeight="25.0" prefWidth="216.0" promptText="Type Name of product" />
-    </AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-        <TableView fx:id="InventoryTable" layoutY="-2.0" prefHeight="359.0" prefWidth="806.0">
+<SplitPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+           prefHeight="453.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ucf.assignments.TrackingInventoryController">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="277.0" prefWidth="807.0">
+        <TableView fx:id="InventoryTable" layoutY="47.0" prefHeight="354.0" prefWidth="806.0">
             <columns>
-                <TableColumn fx:id="ValCol" prefWidth="162.0" text="Value" />
-                <TableColumn fx:id="SerialNumCol" prefWidth="251.0" text="Serial Number" />
-                <TableColumn fx:id="NameCol" prefWidth="392.0" text="Name" />
+                <TableColumn fx:id="ValCol" prefWidth="162.0" text="Value"/>
+                <TableColumn fx:id="SerialNumCol" prefWidth="251.0" text="Serial Number"/>
+                <TableColumn fx:id="NameCol" prefWidth="392.0" text="Name"/>
             </columns>
         </TableView>
-      <Button layoutX="378.0" layoutY="365.0" mnemonicParsing="false" onAction="#openSaveFileController" text="Save/Load" />
+        <Button layoutX="367.0" layoutY="412.0" mnemonicParsing="false" onAction="#openSaveFileController"
+                text="Save/Load"/>
+        <TextField fx:id="searchTextArea" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="700.0"
+                   promptText="Type here to search by name or serial number"/>
+        <Button layoutX="737.0" layoutY="15.0" mnemonicParsing="false" onAction="#searchClick" text="Search"/>
     </AnchorPane>
 </SplitPane>

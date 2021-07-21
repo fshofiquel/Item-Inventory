@@ -1,6 +1,16 @@
+ucf/assignments/InputNewItemController.java
+ ucf.assignments.InputNewItemController
 ucf/assignments/TrackingInventory.java
  ucf.assignments.TrackingInventory
 ucf/assignments/SaveFileAsController.java
  ucf.assignments.SaveFileAsController
+ucf/assignments/NameLengthErrorController.java
+ ucf.assignments.NameLengthErrorController
 ucf/assignments/TrackingInventoryController.java
  ucf.assignments.TrackingInventoryController
+ucf/assignments/SerialFromatErrorController.java
+ ucf.assignments.SerialFromatErrorController
+ucf/assignments/DuplicateSerialNumberErrorController.java
+ ucf.assignments.DuplicateSerialNumberErrorController
+ucf/assignments/createInventory.java
+ ucf.assignments.createInventory
