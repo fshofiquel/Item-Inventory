@@ -17,6 +17,7 @@ class TrackingInventoryController
 
     + addIInventoryClck()
     + openSaveFileController()
+    + openNewWindow()
 }
 
 class SaveFileAsController

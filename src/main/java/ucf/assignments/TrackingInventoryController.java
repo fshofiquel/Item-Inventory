@@ -45,13 +45,17 @@ public class TrackingInventoryController
 	@FXML
 	public void openSaveFileController(ActionEvent actionEvent)
 	{
-		Parent root;
+		openNewWindow("saveFileAs.fxml", "Save As / Import File");
+	}
+
+	public void openNewWindow(String fileName, String windowTitle)
+	{
 		try
 		{
-			root = FXMLLoader.load(getClass().getResource("saveFileAs.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource(fileName));
 			Stage stage = new Stage();
 
-			stage.setTitle("Save As/Import File");
+			stage.setTitle(windowTitle);
 			stage.setScene(new Scene(root));
 			stage.show();
 		} catch (IOException e)
