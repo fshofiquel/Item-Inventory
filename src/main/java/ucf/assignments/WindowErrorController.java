@@ -5,9 +5,12 @@
 package ucf.assignments;
 
 import javafx.event.ActionEvent;
+import javafx.scene.text.Text;
 
-public class DuplicateSerialNumberErrorController
+public class WindowErrorController
 {
+	public Text ErrorText;
+
 	// Closes the window
 	public void DupClickClose(ActionEvent actionEvent)
 	{

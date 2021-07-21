@@ -43,19 +43,9 @@ class InputNewItemController
     + AddItemClick()
 }
 
-class DuplicateSerialNumberErrorController
+class WindowErrorController
 {
-    + DupClickClose()
-}
-
-class NameLengthErrorController
-{
-    + NameClickClose()
-}
-
-class SerialFormatErrorController
-{
-    + SerialClickClose()
+    + WindowClickClose()
 }
 
 class createInventory
@@ -71,9 +61,7 @@ TrackingInventory - TrackingInventoryController
 TrackingInventoryController - createInventory
 TrackingInventoryController -- SaveFileAsController
 TrackingInventoryController -- InputNewItemController
-TrackingInventoryController -- DuplicateSerialNumberErrorController
-InputNewItemController -- DuplicateSerialNumberErrorController
-InputNewItemController -- NameLengthErrorController
-InputNewItemController -- SerialFormatErrorController
+TrackingInventoryController -- WindowErrorController
+InputNewItemController - WindowErrorController
 
 @enduml
