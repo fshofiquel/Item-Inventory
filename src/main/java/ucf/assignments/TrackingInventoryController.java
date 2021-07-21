@@ -63,5 +63,4 @@ public class TrackingInventoryController
 			e.printStackTrace();
 		}
 	}
-
 }
