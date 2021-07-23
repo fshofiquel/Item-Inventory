@@ -9,7 +9,10 @@ class TrackingInventory
 
 class TrackingInventoryController
 {
-    - searchTextArea : TextField
+    - searchTextField : TextField
+    - valueTextField : TextField
+    - serialNumberTextField : TextField
+    - nameTextField : TextField
     ..
     + InventoryTable: TableView
     + ValCol: TableColumn
@@ -34,15 +37,6 @@ class SaveFileAsController
     + loadFileClick()
 }
 
-class InputNewItemController
-{
-    - PriceTextField: TextField
-    - SerialNumberTextField: TextField
-    - NameTextField: TextField
-    ==
-    + AddItemClick()
-}
-
 class WindowErrorController
 {
     + WindowClickClose()
@@ -60,8 +54,6 @@ javafx.Application <|-- TrackingInventory
 TrackingInventory - TrackingInventoryController
 TrackingInventoryController - createInventory
 TrackingInventoryController -- SaveFileAsController
-TrackingInventoryController -- InputNewItemController
 TrackingInventoryController -- WindowErrorController
-InputNewItemController - WindowErrorController
 
 @enduml
