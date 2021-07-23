@@ -20,9 +20,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Formatter;
+import java.util.regex.Pattern;
 
 // This controller will allow the user to remove and edit each invetory item.
 // Since this is a TableView then there will be no need to impliment a sorting method as the TableView can do that
@@ -88,9 +91,11 @@ public class TrackingInventoryController
 				!(serialNumberTextField.getText().trim().isEmpty()) &&
 				!(nameTextField.getText().trim().isEmpty()))
 		{
-			//DecimalFormat formatter = new DecimalFormat("##.##");
-			//String formattedMoney = formatter.format(valueTextField.getText());
-			populateBuffer("text", serialNumberTextField.getText(), nameTextField.getText());
+			BigDecimal money = new BigDecimal(valueTextField.getText());
+			NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+			String moneyString = numberFormat.format(money);
+
+			populateBuffer(moneyString, serialNumberTextField.getText(), nameTextField.getText());
 			setTheCells();
 			inventoryTable.setItems(bufferList);
 		}
@@ -122,7 +127,7 @@ public class TrackingInventoryController
 		valueColumn.setOnEditCommit(event ->
 		{
 			createInventory list = event.getRowValue();
-			list.setStatus(event.getNewValue());
+			list.setValue(event.getNewValue());
 		});
 
 		serialNumberColumn.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
@@ -130,7 +135,7 @@ public class TrackingInventoryController
 		serialNumberColumn.setOnEditCommit(event ->
 		{
 			createInventory list = event.getRowValue();
-			list.setStatus(event.getNewValue());
+			list.setSerialNumber(event.getNewValue());
 		});
 
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -138,7 +143,7 @@ public class TrackingInventoryController
 		nameColumn.setOnEditCommit(event ->
 		{
 			createInventory list = event.getRowValue();
-			list.setStatus(event.getNewValue());
+			list.setName(event.getNewValue());
 		});
 	}
 
