@@ -27,16 +27,6 @@ class TrackingInventoryController
     - openNewWindow()
 }
 
-class SaveFileAsController
-{
-    - saveAsChoiceBox: ChoiceBox
-    - filePathTextField: TextField
-    ==
-    + saveFormatClick()
-    + saveAsClick()
-    + loadFileClick()
-}
-
 class WindowErrorController
 {
     + WindowClickClose()
@@ -53,7 +43,6 @@ javafx.Application <|-- TrackingInventory
 
 TrackingInventory - TrackingInventoryController
 TrackingInventoryController - createInventory
-TrackingInventoryController -- SaveFileAsController
 TrackingInventoryController -- WindowErrorController
 
 @enduml

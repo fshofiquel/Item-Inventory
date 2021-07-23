@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -105,7 +106,10 @@ public class TrackingInventoryController
 	@FXML
 	public void openSaveFileController(ActionEvent actionEvent)
 	{
-		openNewWindow("saveFileAs.fxml", "Save As / Import File");
+		Stage stage = new Stage();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open File");
+		fileChooser.showOpenDialog(stage);
 	}
 
 	@FXML
