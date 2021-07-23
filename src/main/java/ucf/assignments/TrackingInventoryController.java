@@ -83,7 +83,7 @@ public class TrackingInventoryController
 		}
 	}
 
-	// propmpt opening the InputNewItem window.
+	// Inputs new items
 	@FXML
 	public void addItemClick(ActionEvent actionEvent)
 	{
