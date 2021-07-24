@@ -58,10 +58,10 @@ public class TrackingInventoryController
 
 
 	// Used as buffer to store strings obtained from the textfields and store them into TableView
-	public ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
+	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
 	//Global variable used for the index of the tasks in table list and removing them.
 	private int index = -1;
-	public int error = -1;
+	private int totalIndex = 0;
 
 	//
 	@FXML
@@ -83,6 +83,7 @@ public class TrackingInventoryController
 		if (index != -1)
 		{
 			inventoryTable.getItems().remove(index);
+			totalIndex--;
 		}
 	}
 
@@ -90,29 +91,24 @@ public class TrackingInventoryController
 	@FXML
 	public void addItemClick(ActionEvent actionEvent)
 	{
-		Pattern p = Pattern.compile("[+-]?([1-9]\\d*(\\.\\d*[1-9])?|0\\.\\d*[1-9]+)|\\d+(\\.\\d*[1-9])?");
-		Matcher m = p.matcher(valueTextField.getText());
-		boolean b = m.matches();
 
-		if (!b || nameTextField.getText().length() > 256
-				|| nameTextField.getText().length() < 2)
+
+		if (!valIsNumerical() || nameTextField.getText().length() > 256
+				|| nameTextField.getText().length() < 2 || !duplicateChecker())
 		{
 			openNewWindow("WindowError.fxml", "ERROR");
 		}
 
-		// check for duplicate serials here
 		else if (!(valueTextField.getText().trim().isEmpty()) &&
 				!(serialNumberTextField.getText().trim().isEmpty()) &&
 				!(nameTextField.getText().trim().isEmpty()))
 		{
-			BigDecimal money = new BigDecimal(valueTextField.getText());
-			NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-			String moneyString = numberFormat.format(money);
+			String moneyString = formateMoney();
 
 			populateBuffer(moneyString, serialNumberTextField.getText(), nameTextField.getText());
 			setTheCells();
 			inventoryTable.setItems(bufferList);
-			System.out.println(inventoryTable.getColumns().get(0).getText());
+			totalIndex++;
 		}
 	}
 
@@ -127,7 +123,7 @@ public class TrackingInventoryController
 	}
 
 	@FXML
-	public void populateBuffer(String value, String serialNumber, String name)
+	private void populateBuffer(String value, String serialNumber, String name)
 	{
 		bufferList.add(new createInventory(
 				value,
@@ -136,7 +132,7 @@ public class TrackingInventoryController
 	}
 
 	@FXML
-	public void setTheCells()
+	private void setTheCells()
 	{
 		inventoryTable.setEditable(true);
 
@@ -166,6 +162,7 @@ public class TrackingInventoryController
 	}
 
 	// Helper method to reduce clutting when a new window needs to be called.
+	@FXML
 	private void openNewWindow(String fileName, String windowTitle)
 	{
 		try
@@ -181,4 +178,35 @@ public class TrackingInventoryController
 			e.printStackTrace();
 		}
 	}
+
+	private String formateMoney()
+	{
+		BigDecimal money = new BigDecimal(valueTextField.getText());
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+		return numberFormat.format(money);
+	}
+
+
+	// Checks if the input that is inserted is always an integer or a decimal and returns a boolean.
+	private boolean valIsNumerical()
+	{
+		Pattern p = Pattern.compile("[+-]?([1-9]\\d*(\\.\\d*[1-9])?|0\\.\\d*[1-9]+)|\\d+(\\.\\d*[1-9])?");
+		Matcher m = p.matcher(valueTextField.getText());
+		return m.matches();
+	}
+
+	// Runs through the serialNumberColumn and checks is the current serialNumberText field is a duplicate or not
+	// If it is, return false, otherwise always return true.
+	private boolean duplicateChecker()
+	{
+		int i;
+		for (i = 0; i < totalIndex; i++)
+		{
+			if (serialNumberTextField.getText().equals(serialNumberColumn.getCellObservableValue(i).getValue()))
+				return false;
+		}
+
+		return true;
+	}
+
 }
