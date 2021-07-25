@@ -70,7 +70,7 @@ public class TrackingInventoryController
 	{
 		// Check if all the textfields are in their proper formats that have been specificed. If they are not then
 		// trigger opening the error window that will direct the user to check the readme.md for further details.
-		if (!valIsNumerical() || nameTextField.getText().length() > 256 || nameTextField.getText().length() < 2 || !duplicateChecker())
+		if (!valIsNumerical() || !duplicateChecker() || !nameLength() || !alphaNumerical())
 		{
 			openErrorWindow();
 		}
@@ -123,6 +123,9 @@ public class TrackingInventoryController
 		serialNumberColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		serialNumberColumn.setOnEditCommit(event ->
 		{
+			// this additional block is to check if the serial number change is a duplicate or not. If it is
+			// then refresh the window to show the original value and displau the error winow. Otherwise apply
+			// the change.
 			if (!commitDuplicateChecker(event))
 			{
 				inventoryTable.refresh();
@@ -132,7 +135,7 @@ public class TrackingInventoryController
 			else
 			{
 				createInventory list = event.getRowValue();
-				list.setName(event.getNewValue());
+				list.setSerialNumber(event.getNewValue());
 			}
 		});
 
@@ -213,6 +216,7 @@ public class TrackingInventoryController
 		return true;
 	}
 
+	// checks if the commit change to the item's serial number is a duplicate or not.
 	private boolean commitDuplicateChecker(TableColumn.CellEditEvent<createInventory, String> edit)
 	{
 		int i;
@@ -224,6 +228,20 @@ public class TrackingInventoryController
 		}
 
 		return true;
+	}
+
+	// Checks for the length of the item name.
+	private boolean nameLength()
+	{
+		return nameTextField.getText().length() <= 256 && nameTextField.getText().length() >= 2;
+	}
+
+	private boolean alphaNumerical()
+	{
+		Pattern p = Pattern.compile("^\\p{Alnum}+$");
+		Matcher m = p.matcher(nameTextField.getText());
+		System.out.println("name"+m.matches());
+		return m.matches();
 	}
 
 }
