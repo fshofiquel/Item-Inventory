@@ -20,10 +20,11 @@ class TrackingInventoryController
     - NameCol: TableColumn
     ..
     bufferList : ObservableList
+    filterList : FilteredList
+    ..
     - index : int
     - totalIndex : int
     ==
-    + searchClick()
     + removeItemClick()
     + addItemClick()
     + openSaveFileController()
@@ -32,13 +33,19 @@ class TrackingInventoryController
     - openNewWindow()
     - populateBuffer()
     - setTheCells()
-    - formateMoney()
-    - valIsNumerical()
-    - duplicateChecker()
-    - commitDuplicateChecker()
     - searchbar()
-    - nameLength()
-    - alphaNumerical()
+
+
+}
+
+class testCheckers
+{
+    + formateMoney()
+    + valIsNumerical()
+    + duplicateChecker()
+    + commitDuplicateChecker()
+    + nameLength()
+    + alphaNumerical()
 }
 
 class WindowErrorController
@@ -60,5 +67,6 @@ javafx.Application <|-- TrackingInventory
 TrackingInventory - TrackingInventoryController
 TrackingInventoryController - createInventory
 TrackingInventoryController -- WindowErrorController
+TrackingInventoryController -- testCheckers
 
 @enduml

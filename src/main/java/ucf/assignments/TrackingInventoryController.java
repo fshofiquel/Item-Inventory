@@ -23,11 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 // This controller will allow the user to remove and edit each invetory item.
 // Since this is a TableView then there will be no need to impliment a sorting method as the TableView can do that
@@ -63,6 +59,8 @@ public class TrackingInventoryController
 	// Used for the search filter bar.
 	FilteredList<createInventory> filteredList = new FilteredList<>(bufferList, b -> true);
 
+	testCheckers checker = new testCheckers();
+
 	//Global variables used for the index of the items in table list and removing them.
 	private int index = -1;
 	// This is used to find the total index size of the table.
@@ -74,7 +72,8 @@ public class TrackingInventoryController
 	{
 		// Check if all the textfields are in their proper formats that have been specificed. If they are not then
 		// trigger opening the error window that will direct the user to check the readme.md for further details.
-		if (!valIsNumerical() || !duplicateChecker() || !nameLength() || !alphaNumerical())
+		if (!checker.valIsNumerical(valueTextField) || !checker.duplicateChecker(totalIndex, serialNumberTextField, serialNumberColumn)
+				|| !checker.nameLength(nameTextField) || !checker.alphaNumerical(serialNumberTextField))
 		{
 			openErrorWindow();
 		}
@@ -83,11 +82,13 @@ public class TrackingInventoryController
 		else
 		{
 			// Calls the formateMoney function and applies the new change to moneyString.
-			String moneyString = formateMoney();
+			String moneyString = checker.formateMoney(valueTextField);
 
 			// Fills the bufferList with the inputed user values.
+			//createTable.populateBuffer(moneyString, serialNumberTextField.getText(), nameTextField.getText(), bufferList);
 			populateBuffer(moneyString, serialNumberTextField.getText(), nameTextField.getText());
 			// Set the cells as editable for the user.
+			//createTable.setTheCells(inventoryTable, valueColumn, serialNumberColumn, checker, totalIndex, nameColumn);
 			setTheCells();
 			// Updates the inventoryTable to the content of bufferList.
 			inventoryTable.setItems(bufferList);
@@ -136,7 +137,7 @@ public class TrackingInventoryController
 			// this additional block is to check if the serial number change is a duplicate or not. If it is
 			// then refresh the window to show the original value and displau the error winow. Otherwise apply
 			// the change.
-			if (!commitDuplicateChecker(event))
+			if (checker.commitDuplicateChecker(event, serialNumberColumn, totalIndex))
 			{
 				inventoryTable.refresh();
 				openErrorWindow();
@@ -179,7 +180,7 @@ public class TrackingInventoryController
 
 	// Helper method to reduce clutting when calling the error window.
 	@FXML
-	private void openErrorWindow()
+	public void openErrorWindow()
 	{
 		try
 		{
@@ -221,65 +222,5 @@ public class TrackingInventoryController
 		sortedList.comparatorProperty().bind(inventoryTable.comparatorProperty());
 
 		inventoryTable.setItems(sortedList);
-	}
-
-
-	// Formates the string into a BigDecimal in USD and then converts it back to a string and returns that value
-	private String formateMoney()
-	{
-		BigDecimal money = new BigDecimal(valueTextField.getText());
-		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-		return numberFormat.format(money);
-	}
-
-
-	// Checks if the input that is inserted is always an integer or a decimal and returns a boolean.
-	private boolean valIsNumerical()
-	{
-		Pattern p = Pattern.compile("[+-]?([1-9]\\d*(\\.\\d*[1-9])?|0\\.\\d*[1-9]+)|\\d+(\\.\\d*[1-9])?");
-		Matcher m = p.matcher(valueTextField.getText());
-		return m.matches();
-	}
-
-	// Runs through the serialNumberColumn and checks is the current serialNumberText field is a duplicate or not
-	// If it is, return false, otherwise always return true.
-	private boolean duplicateChecker()
-	{
-		int i;
-		for (i = 0; i < totalIndex; i++)
-		{
-			if (serialNumberTextField.getText().equals(serialNumberColumn.getCellObservableValue(i).getValue()))
-				return false;
-		}
-
-		return true;
-	}
-
-	// checks if the commit change to the item's serial number is a duplicate or not.
-	private boolean commitDuplicateChecker(TableColumn.CellEditEvent<createInventory, String> edit)
-	{
-		int i;
-		for (i = 0; i < totalIndex; i++)
-		{
-			if (edit.getNewValue().equals(
-					serialNumberColumn.getCellObservableValue(i).getValue()))
-				return false;
-		}
-
-		return true;
-	}
-
-	// Checks for the length of the item name.
-	private boolean nameLength()
-	{
-		return nameTextField.getText().length() <= 256 && nameTextField.getText().length() >= 2;
-	}
-
-	private boolean alphaNumerical()
-	{
-		Pattern p = Pattern.compile("^\\p{Alnum}+$");
-		Matcher m = p.matcher(nameTextField.getText());
-		System.out.println("name"+m.matches());
-		return m.matches();
 	}
 }
