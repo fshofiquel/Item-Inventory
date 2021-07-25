@@ -29,7 +29,7 @@ import java.util.Locale;
 // Since this is a TableView then there will be no need to impliment a sorting method as the TableView can do that
 // itself.
 // An active search bar would be a good idea to search otherwise enter or a button can be used. Will most
-// Likely need a FilterList to do this.
+// likely need a FilterList to do this.
 public class TrackingInventoryController
 {
 	// Table elements
@@ -97,6 +97,13 @@ public class TrackingInventoryController
 			// Updates the total index of the table by 1.
 			totalIndex++;
 		}
+	}
+
+	public void clearAllFieldsClick(ActionEvent actionEvent)
+	{
+		nameTextField.clear();
+		serialNumberTextField.clear();
+		valueTextField.clear();
 	}
 
 	// Causes the button to launch a new window for save and import.
