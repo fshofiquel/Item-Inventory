@@ -13,13 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,6 +31,7 @@ import java.util.Locale;
 // likely need a FilterList to do this.
 public class TrackingInventoryController
 {
+	public MenuButton menuBar;
 	// Table elements
 	@FXML
 	private TableView<createInventory> inventoryTable;
@@ -108,12 +108,9 @@ public class TrackingInventoryController
 
 	// Causes the button to launch a new window for save and import.
 	@FXML
-	public void openSaveFileController(ActionEvent actionEvent)
+	public void openOrSaveAs(ActionEvent actionEvent)
 	{
-		Stage stage = new Stage();
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open File");
-		fileChooser.showOpenDialog(stage);
+
 	}
 
 	// Everytime the required data is added they are applied to the bufferList.
@@ -229,5 +226,31 @@ public class TrackingInventoryController
 		sortedList.comparatorProperty().bind(inventoryTable.comparatorProperty());
 
 		inventoryTable.setItems(sortedList);
+	}
+
+	@FXML
+	public void saveClick(ActionEvent actionEvent)
+	{
+		Stage stage = new Stage();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save File");
+		fileChooser.getExtensionFilters().addAll(
+				new ExtensionFilter("TSV", "*.tsv"),
+				new ExtensionFilter("HTML", "*.html"),
+				new ExtensionFilter("JSON", "*.json"));
+		fileChooser.showSaveDialog(stage);
+	}
+
+	@FXML
+	public void loadClick(ActionEvent actionEvent)
+	{
+		Stage stage = new Stage();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save File");
+		fileChooser.getExtensionFilters().addAll(
+				new ExtensionFilter("TSV", "*.tsv"),
+				new ExtensionFilter("HTML", "*.html"),
+				new ExtensionFilter("JSON", "*.json"));
+		fileChooser.showOpenDialog(stage);
 	}
 }
