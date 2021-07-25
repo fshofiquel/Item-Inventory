@@ -36,6 +36,9 @@ class TrackingInventoryController
     - valIsNumerical()
     - duplicateChecker()
     - commitDuplicateChecker()
+    - searchbar()
+    - nameLength()
+    - alphaNumerical()
 }
 
 class WindowErrorController

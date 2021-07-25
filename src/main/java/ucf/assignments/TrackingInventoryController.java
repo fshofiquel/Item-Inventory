@@ -6,6 +6,8 @@ package ucf.assignments;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +45,8 @@ public class TrackingInventoryController
 	private TableColumn<createInventory, String> serialNumberColumn;
 	@FXML
 	private TableColumn<createInventory, String> nameColumn;
-	// Used as buffer to store strings obtained from the textfields and store them into TableView
-	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
+
+
 	// Input variables
 	@FXML
 	private TextField searchTextField;
@@ -53,16 +56,17 @@ public class TrackingInventoryController
 	private TextField serialNumberTextField;
 	@FXML
 	private TextField nameTextField;
+
+	// Used as buffer to store strings obtained from the textfields and store them into TableView
+	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
+
+	// Used for the search filter bar.
+	FilteredList<createInventory> filteredList = new FilteredList<>(bufferList, b -> true);
+
 	//Global variables used for the index of the items in table list and removing them.
 	private int index = -1;
 	// This is used to find the total index size of the table.
 	private int totalIndex = 0;
-
-	//
-	@FXML
-	public void searchClick(ActionEvent actionEvent)
-	{
-	}
 
 	// Inputs new items
 	@FXML
@@ -75,15 +79,21 @@ public class TrackingInventoryController
 			openErrorWindow();
 		}
 
-		// If any of the textfields are empty then ignore taking an input otherwise call this block.
-		// Here totalIndex is incrimented to indicate that a new row has been added.
-		else if (!(valueTextField.getText().trim().isEmpty()) && !(serialNumberTextField.getText().trim().isEmpty()) && !(nameTextField.getText().trim().isEmpty()))
+		// If it still passes the if check then execute this.
+		else
 		{
+			// Calls the formateMoney function and applies the new change to moneyString.
 			String moneyString = formateMoney();
 
+			// Fills the bufferList with the inputed user values.
 			populateBuffer(moneyString, serialNumberTextField.getText(), nameTextField.getText());
+			// Set the cells as editable for the user.
 			setTheCells();
+			// Updates the inventoryTable to the content of bufferList.
 			inventoryTable.setItems(bufferList);
+			// Updates the content of the filterList for the search filter.
+			searchBar();
+			// Updates the total index of the table by 1.
 			totalIndex++;
 		}
 	}
@@ -105,7 +115,7 @@ public class TrackingInventoryController
 		bufferList.add(new createInventory(value, serialNumber, name));
 	}
 
-	// Sets the cell value factory and enables editing of value, serialNumber and name cells of the tasks.
+	// Sets the cell value factory and enables editing of value, serialNumber and name cells of the items.
 	@FXML
 	private void setTheCells()
 	{
@@ -156,7 +166,7 @@ public class TrackingInventoryController
 	}
 
 	// Removes and item that is selected from the inventoryTable
-	// Also note that totalIndex is decrimented since a tow is removed from the table.
+	// Also note that totalIndex is decrimented since a row is removed from the table.
 	@FXML
 	public void removeItemClick(ActionEvent actionEvent)
 	{
@@ -184,6 +194,35 @@ public class TrackingInventoryController
 			e.printStackTrace();
 		}
 	}
+
+	// The helper method for the search bar.
+	@FXML
+	private void searchBar()
+	{
+		searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredList.setPredicate(item -> {
+				if (newValue == null || newValue.isEmpty())
+				{
+					return true;
+				}
+
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (item.getName().toLowerCase(Locale.ROOT).contains(lowerCaseFilter))
+					return true;
+
+				else
+					return item.getSerialNumber().toLowerCase().contains(lowerCaseFilter);
+			});
+		});
+
+		SortedList<createInventory> sortedList = new SortedList<>(filteredList);
+
+		sortedList.comparatorProperty().bind(inventoryTable.comparatorProperty());
+
+		inventoryTable.setItems(sortedList);
+	}
+
 
 	// Formates the string into a BigDecimal in USD and then converts it back to a string and returns that value
 	private String formateMoney()
@@ -243,5 +282,4 @@ public class TrackingInventoryController
 		System.out.println("name"+m.matches());
 		return m.matches();
 	}
-
 }
