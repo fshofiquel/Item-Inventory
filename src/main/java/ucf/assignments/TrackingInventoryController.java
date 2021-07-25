@@ -21,7 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Locale;
 
 // This controller will allow the user to remove and edit each invetory item.
@@ -32,6 +32,11 @@ import java.util.Locale;
 public class TrackingInventoryController
 {
 	public MenuButton menuBar;
+	// Used as buffer to store strings obtained from the textfields and store them into TableView
+	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
+	// Used for the search filter bar.
+	FilteredList<createInventory> filteredList = new FilteredList<>(bufferList, b -> true);
+	testCheckers checker = new testCheckers();
 	// Table elements
 	@FXML
 	private TableView<createInventory> inventoryTable;
@@ -41,8 +46,6 @@ public class TrackingInventoryController
 	private TableColumn<createInventory, String> serialNumberColumn;
 	@FXML
 	private TableColumn<createInventory, String> nameColumn;
-
-
 	// Input variables
 	@FXML
 	private TextField searchTextField;
@@ -52,15 +55,6 @@ public class TrackingInventoryController
 	private TextField serialNumberTextField;
 	@FXML
 	private TextField nameTextField;
-
-	// Used as buffer to store strings obtained from the textfields and store them into TableView
-	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
-
-	// Used for the search filter bar.
-	FilteredList<createInventory> filteredList = new FilteredList<>(bufferList, b -> true);
-
-	testCheckers checker = new testCheckers();
-
 	//Global variables used for the index of the items in table list and removing them.
 	private int index = -1;
 	// This is used to find the total index size of the table.
@@ -72,8 +66,7 @@ public class TrackingInventoryController
 	{
 		// Check if all the textfields are in their proper formats that have been specificed. If they are not then
 		// trigger opening the error window that will direct the user to check the readme.md for further details.
-		if (!checker.valIsNumerical(valueTextField) || !checker.duplicateChecker(totalIndex, serialNumberTextField, serialNumberColumn)
-				|| !checker.nameLength(nameTextField) || !checker.alphaNumerical(serialNumberTextField))
+		if (!checker.valIsNumerical(valueTextField) || !checker.duplicateChecker(totalIndex, serialNumberTextField, serialNumberColumn) || !checker.nameLength(nameTextField) || !checker.alphaNumerical(serialNumberTextField))
 		{
 			openErrorWindow();
 		}
@@ -104,13 +97,6 @@ public class TrackingInventoryController
 		nameTextField.clear();
 		serialNumberTextField.clear();
 		valueTextField.clear();
-	}
-
-	// Causes the button to launch a new window for save and import.
-	@FXML
-	public void openOrSaveAs(ActionEvent actionEvent)
-	{
-
 	}
 
 	// Everytime the required data is added they are applied to the bufferList.
@@ -158,8 +144,8 @@ public class TrackingInventoryController
 		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		nameColumn.setOnEditCommit(event ->
 		{
-				createInventory list = event.getRowValue();
-				list.setName(event.getNewValue());
+			createInventory list = event.getRowValue();
+			list.setName(event.getNewValue());
 		});
 	}
 
@@ -204,8 +190,10 @@ public class TrackingInventoryController
 	@FXML
 	private void searchBar()
 	{
-		searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredList.setPredicate(item -> {
+		searchTextField.textProperty().addListener((observable, oldValue, newValue) ->
+		{
+			filteredList.setPredicate(item ->
+			{
 				if (newValue == null || newValue.isEmpty())
 				{
 					return true;
@@ -231,15 +219,72 @@ public class TrackingInventoryController
 	@FXML
 	public void saveClick(ActionEvent actionEvent)
 	{
+		String typeChoice;
 		Stage stage = new Stage();
 		FileChooser fileChooser = new FileChooser();
+
 		fileChooser.setTitle("Save File");
-		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("TSV", "*.tsv"),
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"),
 				new ExtensionFilter("HTML", "*.html"),
 				new ExtensionFilter("JSON", "*.json"));
-		fileChooser.showSaveDialog(stage);
+		File file = fileChooser.showSaveDialog(stage);
+		typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
+		if (file != null)
+		{
+			try
+			{
+				saveFile(file, typeChoice);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
+
+	@FXML
+	public void saveFile(File file, String typeChoice) throws IOException
+	{
+		switch (typeChoice)
+		{
+			case "TXT":
+				writeAsTSV(file);
+				break;
+			case "HTML":
+				// stuff
+				break;
+			case "JSON":
+				// stuff
+				break;
+		}
+
+	}
+
+	private void writeAsTSV(File file) throws IOException
+	{
+		Writer writer = null;
+
+		try
+		{
+			//file = new File("list.txt");
+			writer = new BufferedWriter(new FileWriter(file));
+			for (createInventory list : bufferList)
+			{
+				String text = list.getValue() + "\t" + list.getSerialNumber() + "\t" + list.getName() + "\n";
+
+				writer.write(text);
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			assert writer != null;
+			writer.flush();
+			writer.close();
+		}
+	}
+
+
 
 	@FXML
 	public void loadClick(ActionEvent actionEvent)
@@ -247,10 +292,7 @@ public class TrackingInventoryController
 		Stage stage = new Stage();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save File");
-		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("TSV", "*.tsv"),
-				new ExtensionFilter("HTML", "*.html"),
-				new ExtensionFilter("JSON", "*.json"));
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"), new ExtensionFilter("HTML", "*.html"), new ExtensionFilter("JSON", "*.json"));
 		fileChooser.showOpenDialog(stage);
 	}
 }
