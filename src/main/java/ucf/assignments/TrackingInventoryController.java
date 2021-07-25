@@ -35,13 +35,13 @@ public class TrackingInventoryController
 {
 	// Table elements
 	@FXML
-	public TableView<createInventory> inventoryTable;
+	private TableView<createInventory> inventoryTable;
 	@FXML
-	public TableColumn<createInventory, String> valueColumn;
+	private TableColumn<createInventory, String> valueColumn;
 	@FXML
-	public TableColumn<createInventory, String> serialNumberColumn;
+	private TableColumn<createInventory, String> serialNumberColumn;
 	@FXML
-	public TableColumn<createInventory, String> nameColumn;
+	private TableColumn<createInventory, String> nameColumn;
 	// Used as buffer to store strings obtained from the textfields and store them into TableView
 	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
 	// Input variables
@@ -72,7 +72,7 @@ public class TrackingInventoryController
 		// trigger opening the error window that will direct the user to check the readme.md for further details.
 		if (!valIsNumerical() || nameTextField.getText().length() > 256 || nameTextField.getText().length() < 2 || !duplicateChecker())
 		{
-			openNewWindow();
+			openErrorWindow();
 		}
 
 		// If any of the textfields are empty then ignore taking an input otherwise call this block.
@@ -126,7 +126,7 @@ public class TrackingInventoryController
 			if (!commitDuplicateChecker(event))
 			{
 				inventoryTable.refresh();
-				openNewWindow();
+				openErrorWindow();
 			}
 
 			else
@@ -166,7 +166,7 @@ public class TrackingInventoryController
 
 	// Helper method to reduce clutting when calling the error window.
 	@FXML
-	private void openNewWindow()
+	private void openErrorWindow()
 	{
 		try
 		{

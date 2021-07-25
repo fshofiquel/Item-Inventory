@@ -14,29 +14,42 @@ class TrackingInventoryController
     - serialNumberTextField : TextField
     - nameTextField : TextField
     ..
-    + InventoryTable: TableView
-    + ValCol: TableColumn
-    + SerialNumCol: TableColumn
-    + NameCol: TableColumn
+    - InventoryTable: TableView
+    - ValCol: TableColumn
+    - SerialNumCol: TableColumn
+    - NameCol: TableColumn
+    ..
+    bufferList : ObservableList
+    - index : int
+    - totalIndex : int
     ==
     + searchClick()
     + removeItemClick()
     + addItemClick()
     + openSaveFileController()
+    + itemSelectClick()
     ..
     - openNewWindow()
+    - populateBuffer()
+    - setTheCells()
+    - formateMoney()
+    - valIsNumerical()
+    - duplicateChecker()
+    - commitDuplicateChecker()
 }
 
 class WindowErrorController
 {
+    + WindowClickButton : Button
+    ==
     + WindowClickClose()
 }
 
 class createInventory
 {
-    +getters()
-    +setter()
-    +putters()
+    + constructors()
+    + getters()
+    + setter()
 }
 
 javafx.Application <|-- TrackingInventory
