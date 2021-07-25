@@ -224,9 +224,7 @@ public class TrackingInventoryController
 		FileChooser fileChooser = new FileChooser();
 
 		fileChooser.setTitle("Save File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"),
-				new ExtensionFilter("HTML", "*.html"),
-				new ExtensionFilter("JSON", "*.json"));
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"), new ExtensionFilter("HTML", "*.html"), new ExtensionFilter("JSON", "*.json"));
 		File file = fileChooser.showSaveDialog(stage);
 		typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
 		if (file != null)
@@ -250,7 +248,7 @@ public class TrackingInventoryController
 				writeAsTSV(file);
 				break;
 			case "HTML":
-				// stuff
+				writeHTML(file);
 				break;
 			case "JSON":
 				// stuff
@@ -284,15 +282,92 @@ public class TrackingInventoryController
 		}
 	}
 
+	private void writeHTML(File file) throws IOException
+	{
+		Writer writer = null;
+
+		try
+		{
+			//file = new File("list.txt");
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write("""
+					<!DOCTYPE html>
+					<html>
+					<body>
+					<table style>
+					<tr>
+					<th>Value</th>
+					<th>Serial Number</th>
+					<th>Name</th>
+					</tr>""");
+
+
+			for (createInventory list : bufferList)
+			{
+				writer.write("<tr>"+
+					"<th>"+list.getValue()+"</th>"+
+					"<th>"+list.getSerialNumber()+"</th>"+
+					"<th>"+list.getName()+"</th>"+
+					"</tr>");
+			}
+
+			writer.write("""
+					</table>
+					</body>
+					</html>
+					""");
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			assert writer != null;
+			writer.flush();
+			writer.close();
+		}
+	}
+
 
 
 	@FXML
 	public void loadClick(ActionEvent actionEvent)
 	{
+		String typeChoice;
 		Stage stage = new Stage();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"), new ExtensionFilter("HTML", "*.html"), new ExtensionFilter("JSON", "*.json"));
-		fileChooser.showOpenDialog(stage);
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"),
+				new ExtensionFilter("HTML", "*.html"),
+				new ExtensionFilter("JSON", "*.json"));
+		File file = fileChooser.showOpenDialog(stage);
+		typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
+		if (file != null)
+		{
+			try
+			{
+				openFile(file, typeChoice);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@FXML
+	public void openFile (File file, String typeChoice) throws IOException
+	{
+		switch (typeChoice)
+		{
+			case "TXT":
+				//loadTSV(file);
+				break;
+			case "HTML":
+				//loadHTML(file);
+				break;
+			case "JSON":
+				// stuff
+				break;
+		}
+
 	}
 }
