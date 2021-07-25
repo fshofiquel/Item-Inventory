@@ -4,7 +4,6 @@
  */
 package ucf.assignments;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,9 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,16 +33,6 @@ import java.util.regex.Pattern;
 // Likely need a FilterList to do this.
 public class TrackingInventoryController
 {
-	// Input variables
-	@FXML
-	private TextField searchTextField;
-	@FXML
-	private TextField valueTextField;
-	@FXML
-	private TextField serialNumberTextField;
-	@FXML
-	private TextField nameTextField;
-
 	// Table elements
 	@FXML
 	public TableView<createInventory> inventoryTable;
@@ -55,12 +42,20 @@ public class TrackingInventoryController
 	public TableColumn<createInventory, String> serialNumberColumn;
 	@FXML
 	public TableColumn<createInventory, String> nameColumn;
-
-
 	// Used as buffer to store strings obtained from the textfields and store them into TableView
 	ObservableList<createInventory> bufferList = FXCollections.observableArrayList();
-	//Global variable used for the index of the tasks in table list and removing them.
+	// Input variables
+	@FXML
+	private TextField searchTextField;
+	@FXML
+	private TextField valueTextField;
+	@FXML
+	private TextField serialNumberTextField;
+	@FXML
+	private TextField nameTextField;
+	//Global variables used for the index of the items in table list and removing them.
 	private int index = -1;
+	// This is used to find the total index size of the table.
 	private int totalIndex = 0;
 
 	//
@@ -69,39 +64,20 @@ public class TrackingInventoryController
 	{
 	}
 
-	// Update the index value of the current index of the inventoryTable
-	@FXML
-	public void itemSelectClick(MouseEvent mouseEvent)
-	{
-		index = inventoryTable.getSelectionModel().getSelectedIndex();
-	}
-
-	// Removes and item that is selected from the TableView
-	@FXML
-	public void removeItemClick(ActionEvent actionEvent)
-	{
-		if (index != -1)
-		{
-			inventoryTable.getItems().remove(index);
-			totalIndex--;
-		}
-	}
-
 	// Inputs new items
 	@FXML
 	public void addItemClick(ActionEvent actionEvent)
 	{
-
-
-		if (!valIsNumerical() || nameTextField.getText().length() > 256
-				|| nameTextField.getText().length() < 2 || !duplicateChecker())
+		// Check if all the textfields are in their proper formats that have been specificed. If they are not then
+		// trigger opening the error window that will direct the user to check the readme.md for further details.
+		if (!valIsNumerical() || nameTextField.getText().length() > 256 || nameTextField.getText().length() < 2 || !duplicateChecker())
 		{
-			openNewWindow("WindowError.fxml", "ERROR");
+			openNewWindow();
 		}
 
-		else if (!(valueTextField.getText().trim().isEmpty()) &&
-				!(serialNumberTextField.getText().trim().isEmpty()) &&
-				!(nameTextField.getText().trim().isEmpty()))
+		// If any of the textfields are empty then ignore taking an input otherwise call this block.
+		// Here totalIndex is incrimented to indicate that a new row has been added.
+		else if (!(valueTextField.getText().trim().isEmpty()) && !(serialNumberTextField.getText().trim().isEmpty()) && !(nameTextField.getText().trim().isEmpty()))
 		{
 			String moneyString = formateMoney();
 
@@ -122,15 +98,14 @@ public class TrackingInventoryController
 		fileChooser.showOpenDialog(stage);
 	}
 
+	// Everytime the required data is added they are applied to the bufferList.
 	@FXML
 	private void populateBuffer(String value, String serialNumber, String name)
 	{
-		bufferList.add(new createInventory(
-				value,
-				serialNumber,
-				name));
+		bufferList.add(new createInventory(value, serialNumber, name));
 	}
 
+	// Sets the cell value factory and enables editing of value, serialNumber and name cells of the tasks.
 	@FXML
 	private void setTheCells()
 	{
@@ -148,29 +123,57 @@ public class TrackingInventoryController
 		serialNumberColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		serialNumberColumn.setOnEditCommit(event ->
 		{
-			createInventory list = event.getRowValue();
-			list.setSerialNumber(event.getNewValue());
+			if (!commitDuplicateChecker(event))
+			{
+				inventoryTable.refresh();
+				openNewWindow();
+			}
+
+			else
+			{
+				createInventory list = event.getRowValue();
+				list.setName(event.getNewValue());
+			}
 		});
 
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		nameColumn.setOnEditCommit(event ->
 		{
-			createInventory list = event.getRowValue();
-			list.setName(event.getNewValue());
+				createInventory list = event.getRowValue();
+				list.setName(event.getNewValue());
 		});
 	}
 
-	// Helper method to reduce clutting when a new window needs to be called.
+	// Update the index value of the current index of the inventoryTable
 	@FXML
-	private void openNewWindow(String fileName, String windowTitle)
+	public void itemSelectClick(MouseEvent mouseEvent)
+	{
+		index = inventoryTable.getSelectionModel().getSelectedIndex();
+	}
+
+	// Removes and item that is selected from the inventoryTable
+	// Also note that totalIndex is decrimented since a tow is removed from the table.
+	@FXML
+	public void removeItemClick(ActionEvent actionEvent)
+	{
+		if (index != -1)
+		{
+			inventoryTable.getItems().remove(index);
+			totalIndex--;
+		}
+	}
+
+	// Helper method to reduce clutting when calling the error window.
+	@FXML
+	private void openNewWindow()
 	{
 		try
 		{
-			Parent root = FXMLLoader.load(getClass().getResource(fileName));
+			Parent root = FXMLLoader.load(getClass().getResource("WindowError.fxml"));
 			Stage stage = new Stage();
 
-			stage.setTitle(windowTitle);
+			stage.setTitle("ERROR");
 			stage.setScene(new Scene(root));
 			stage.show();
 		} catch (IOException e)
@@ -179,6 +182,7 @@ public class TrackingInventoryController
 		}
 	}
 
+	// Formates the string into a BigDecimal in USD and then converts it back to a string and returns that value
 	private String formateMoney()
 	{
 		BigDecimal money = new BigDecimal(valueTextField.getText());
@@ -203,6 +207,19 @@ public class TrackingInventoryController
 		for (i = 0; i < totalIndex; i++)
 		{
 			if (serialNumberTextField.getText().equals(serialNumberColumn.getCellObservableValue(i).getValue()))
+				return false;
+		}
+
+		return true;
+	}
+
+	private boolean commitDuplicateChecker(TableColumn.CellEditEvent<createInventory, String> edit)
+	{
+		int i;
+		for (i = 0; i < totalIndex; i++)
+		{
+			if (edit.getNewValue().equals(
+					serialNumberColumn.getCellObservableValue(i).getValue()))
 				return false;
 		}
 
