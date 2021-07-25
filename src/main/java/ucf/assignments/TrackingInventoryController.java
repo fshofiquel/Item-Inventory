@@ -4,6 +4,7 @@
  */
 package ucf.assignments;
 
+import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -244,26 +245,19 @@ public class TrackingInventoryController
 	{
 		switch (typeChoice)
 		{
-			case "TXT":
-				writeAsTSV(file);
-				break;
-			case "HTML":
-				writeHTML(file);
-				break;
-			case "JSON":
-				// stuff
-				break;
+			case "TXT" -> writeTSV(file);
+			case "HTML" -> writeHTML(file);
+			case "JSON" -> writeJSON(file);
 		}
 
 	}
 
-	private void writeAsTSV(File file) throws IOException
+	private void writeTSV(File file) throws IOException
 	{
 		Writer writer = null;
 
 		try
 		{
-			//file = new File("list.txt");
 			writer = new BufferedWriter(new FileWriter(file));
 			for (createInventory list : bufferList)
 			{
@@ -288,7 +282,6 @@ public class TrackingInventoryController
 
 		try
 		{
-			//file = new File("list.txt");
 			writer = new BufferedWriter(new FileWriter(file));
 			writer.write("""
 					<!DOCTYPE html>
@@ -327,6 +320,29 @@ public class TrackingInventoryController
 		}
 	}
 
+	private void writeJSON(File file) throws IOException
+	{
+		Gson gson = new Gson();
+		Writer writer = null;
+
+		try
+		{
+			writer = new BufferedWriter(new FileWriter(file));
+			for (createInventory list : bufferList)
+			{
+				createInventory[] tempInven = new createInventory[] {new createInventory(list.getValue(), list.getSerialNumber(), list.getName())};
+				gson.toJson(tempInven, writer);
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}finally
+		{
+			assert writer != null;
+			writer.flush();
+			writer.close();
+		}
+	}
 
 
 	@FXML
