@@ -56,8 +56,7 @@ public class TrackingInventoryController
 	private TextField serialNumberTextField;
 	@FXML
 	private TextField nameTextField;
-	//Global variables used for the index of the items in table list and removing them.
-	private int index = -1;
+
 	// This is used to find the total index size of the table.
 	private int totalIndex = 0;
 
@@ -91,6 +90,10 @@ public class TrackingInventoryController
 			// Updates the total index of the table by 1.
 			totalIndex++;
 		}
+
+		valueTextField.clear();
+		serialNumberTextField.clear();
+		nameTextField.clear();
 	}
 
 	public void clearAllFieldsClick(ActionEvent actionEvent)
@@ -150,21 +153,15 @@ public class TrackingInventoryController
 		});
 	}
 
-	// Update the index value of the current index of the inventoryTable
-	@FXML
-	public void itemSelectClick(MouseEvent mouseEvent)
-	{
-		index = inventoryTable.getSelectionModel().getSelectedIndex();
-	}
-
 	// Removes and item that is selected from the inventoryTable
 	// Also note that totalIndex is decrimented since a row is removed from the table.
 	@FXML
 	public void removeItemClick(ActionEvent actionEvent)
 	{
-		if (index != -1)
+		createInventory selectedItem = inventoryTable.getSelectionModel().getSelectedItem();
+		if (selectedItem != null)
 		{
-			inventoryTable.getItems().remove(index);
+			bufferList.remove(selectedItem);
 			totalIndex--;
 		}
 	}
@@ -227,9 +224,10 @@ public class TrackingInventoryController
 		fileChooser.setTitle("Save File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TXT", "*.txt"), new ExtensionFilter("HTML", "*.html"), new ExtensionFilter("JSON", "*.json"));
 		File file = fileChooser.showSaveDialog(stage);
-		typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
+
 		if (file != null)
 		{
+			typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
 			try
 			{
 				saveFile(file, typeChoice);
@@ -238,6 +236,7 @@ public class TrackingInventoryController
 				e.printStackTrace();
 			}
 		}
+
 	}
 
 	@FXML
@@ -256,34 +255,41 @@ public class TrackingInventoryController
 	{
 		Writer writer = null;
 
-		try
+		if (file != null)
 		{
-			writer = new BufferedWriter(new FileWriter(file));
-			for (createInventory list : bufferList)
+			try
 			{
-				String text = list.getValue() + "\t" + list.getSerialNumber() + "\t" + list.getName() + "\n";
+				writer = new BufferedWriter(new FileWriter(file));
+				for (createInventory list : bufferList)
+				{
+					String text = list.getValue() + "\t" + list.getSerialNumber() + "\t" + list.getName() + "\n";
 
-				writer.write(text);
+					writer.write(text);
+				}
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				assert writer != null;
+				writer.flush();
+				writer.close();
 			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} finally
-		{
-			assert writer != null;
-			writer.flush();
-			writer.close();
 		}
+
+
 	}
 
 	private void writeHTML(File file) throws IOException
 	{
 		Writer writer = null;
 
-		try
+		if (file != null)
 		{
-			writer = new BufferedWriter(new FileWriter(file));
-			writer.write("""
+			try
+			{
+				writer = new BufferedWriter(new FileWriter(file));
+				writer.write("""
 					<!DOCTYPE html>
 					<html>
 					<body>
@@ -295,28 +301,29 @@ public class TrackingInventoryController
 					</tr>""");
 
 
-			for (createInventory list : bufferList)
-			{
-				writer.write("<tr>"+
-					"<th>"+list.getValue()+"</th>"+
-					"<th>"+list.getSerialNumber()+"</th>"+
-					"<th>"+list.getName()+"</th>"+
-					"</tr>");
-			}
+				for (createInventory list : bufferList)
+				{
+					writer.write("<tr>"+
+							"<th>"+list.getValue()+"</th>"+
+							"<th>"+list.getSerialNumber()+"</th>"+
+							"<th>"+list.getName()+"</th>"+
+							"</tr>");
+				}
 
-			writer.write("""
+				writer.write("""
 					</table>
 					</body>
 					</html>
 					""");
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} finally
-		{
-			assert writer != null;
-			writer.flush();
-			writer.close();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				assert writer != null;
+				writer.flush();
+				writer.close();
+			}
 		}
 	}
 
@@ -325,25 +332,45 @@ public class TrackingInventoryController
 		Gson gson = new Gson();
 		Writer writer = null;
 
-		try
+		if (file != null)
 		{
-			writer = new BufferedWriter(new FileWriter(file));
-			for (createInventory list : bufferList)
+			try
 			{
-				createInventory[] tempInven = new createInventory[] {new createInventory(list.getValue(), list.getSerialNumber(), list.getName())};
-				gson.toJson(tempInven, writer);
+				writer = new BufferedWriter(new FileWriter(file));
+				for (createInventory list : bufferList)
+				{
+					createInventory[] tempInven = new createInventory[] {new createInventory(list.getValue(), list.getSerialNumber(), list.getName())};
+					gson.toJson(tempInven, writer);
+				}
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}finally
+			{
+				assert writer != null;
+				writer.flush();
+				writer.close();
 			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}finally
-		{
-			assert writer != null;
-			writer.flush();
-			writer.close();
 		}
 	}
 
+	@FXML
+	public void loadFile (File file, String typeChoice) throws IOException
+	{
+		switch (typeChoice)
+		{
+			case "TXT":
+				loadTSV(file);
+				break;
+			case "HTML":
+				//loadHTML(file);
+				break;
+			case "JSON":
+				// stuff
+				break;
+		}
+
+	}
 
 	@FXML
 	public void loadClick(ActionEvent actionEvent)
@@ -356,12 +383,12 @@ public class TrackingInventoryController
 				new ExtensionFilter("HTML", "*.html"),
 				new ExtensionFilter("JSON", "*.json"));
 		File file = fileChooser.showOpenDialog(stage);
-		typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
 		if (file != null)
 		{
+			typeChoice = fileChooser.getSelectedExtensionFilter().getDescription();
 			try
 			{
-				openFile(file, typeChoice);
+				loadFile(file, typeChoice);
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -369,21 +396,36 @@ public class TrackingInventoryController
 		}
 	}
 
-	@FXML
-	public void openFile (File file, String typeChoice) throws IOException
+	private void loadTSV(File file) throws IOException
 	{
-		switch (typeChoice)
+		BufferedReader reader = null;
+		String FieldDelimiter = "\t";
+		if (file != null)
 		{
-			case "TXT":
-				//loadTSV(file);
-				break;
-			case "HTML":
-				//loadHTML(file);
-				break;
-			case "JSON":
-				// stuff
-				break;
-		}
+			try{
+				reader = new BufferedReader(new FileReader(file));
+				String text;
 
+				while ((text = reader.readLine()) != null)
+				{
+					String[] fields = text.split(FieldDelimiter, -1);
+					String value = fields[0];
+					String serialNumber = fields[1];
+					String name = fields[2];
+
+					populateBuffer(value, serialNumber, name);
+					setTheCells();
+					inventoryTable.setItems(bufferList);
+				}
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				assert reader != null;
+				reader.close();
+			}
+		}
 	}
+
 }
