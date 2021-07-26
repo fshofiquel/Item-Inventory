@@ -5,6 +5,9 @@
 package ucf.assignments;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -17,11 +20,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import javafx.stage.Stage;
-import org.jsoup.Jsoup;
 
 import java.io.*;
 import java.util.Locale;
@@ -347,15 +348,9 @@ public class TrackingInventoryController
 	{
 		switch (typeChoice)
 		{
-			case "TXT":
-				loadTSV(file);
-				break;
-			case "HTML":
-				loadHTML(file);
-				break;
-			case "JSON":
-				// stuff
-				break;
+			case "TXT" -> loadTSV(file);
+			case "HTML" -> loadHTML(file);
+			case "JSON" -> loadJSON(file);
 		}
 
 	}
@@ -418,11 +413,8 @@ public class TrackingInventoryController
 
 	private void loadHTML(File file) throws IOException
 	{
-		StringBuilder stringBuilder = new StringBuilder();
 		BufferedReader reader = null;
 		String FieldDelimiter = "\t";
-
-		int i = 0;
 
 		if (file != null)
 		{
@@ -459,5 +451,10 @@ public class TrackingInventoryController
 		}
 	}
 
+
+	private void loadJSON(File file) throws IOException
+	{
+
+	}
 
 }
