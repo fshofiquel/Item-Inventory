@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import javafx.stage.Stage;
+import org.jsoup.Jsoup;
 
 import java.io.*;
 import java.util.Locale;
@@ -289,32 +290,19 @@ public class TrackingInventoryController
 			try
 			{
 				writer = new BufferedWriter(new FileWriter(file));
-				writer.write("""
-					<!DOCTYPE html>
-					<html>
-					<body>
-					<table style>
-					<tr>
-					<th>Value</th>
-					<th>Serial Number</th>
-					<th>Name</th>
-					</tr>""");
+				writer.write("<!DOCTYPE html><html><body><table style>\n");
 
 
 				for (createInventory list : bufferList)
 				{
-					writer.write("<tr>"+
-							"<th>"+list.getValue()+"</th>"+
-							"<th>"+list.getSerialNumber()+"</th>"+
-							"<th>"+list.getName()+"</th>"+
-							"</tr>");
+					writer.write("<tr>\n"+
+							"<th>"+list.getValue()+"</th>\t"+
+							"<th>"+list.getSerialNumber()+"</th>\t"+
+							"<th>"+list.getName()+"</th>\t"+
+							"</tr>\n");
 				}
 
-				writer.write("""
-					</table>
-					</body>
-					</html>
-					""");
+				writer.write("</table></body></html>");
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -363,7 +351,7 @@ public class TrackingInventoryController
 				loadTSV(file);
 				break;
 			case "HTML":
-				//loadHTML(file);
+				loadHTML(file);
 				break;
 			case "JSON":
 				// stuff
@@ -427,5 +415,49 @@ public class TrackingInventoryController
 			}
 		}
 	}
+
+	private void loadHTML(File file) throws IOException
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		BufferedReader reader = null;
+		String FieldDelimiter = "\t";
+
+		int i = 0;
+
+		if (file != null)
+		{
+			try{
+				reader = new BufferedReader(new FileReader(file));
+				String text;
+
+				while ((text = reader.readLine()) != null)
+				{
+					String temp;
+					temp = text.replaceAll("\\<.*?>", "");
+					if (!temp.isEmpty())
+					{
+						String[] fields = temp.split(FieldDelimiter, -1);
+						String value = fields[0];
+						String serialNumber = fields[1];
+						String name = fields[2];
+
+						populateBuffer(value, serialNumber, name);
+						setTheCells();
+						inventoryTable.setItems(bufferList);
+					}
+				}
+
+
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				assert reader != null;
+				reader.close();
+			}
+		}
+	}
+
 
 }
